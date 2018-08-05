@@ -9,15 +9,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.kohsuke.github.GHCommitState;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHPullRequestFileDetail;
+import org.kohsuke.github.GHPullRequestReviewComment;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
 public class GithubHelper {
+    private static final String CONTEXT = "convention/checkstyle";
+    private static final String PREFIX = "[checkstyle]";
     private GHRepository repo;
     private GHPullRequest pr;
+    private String username;
 
     public GithubHelper() {
     }
@@ -53,6 +58,7 @@ public class GithubHelper {
                 .withOAuthToken(token)
                 .build();
 
+            this.username = github.getMyself().getLogin();
             this.repo = github.getRepository(repository);
             this.pr = this.repo.getPullRequest(pullRequest);
         } catch (IOException e) {
@@ -80,5 +86,45 @@ public class GithubHelper {
         }
 
         return linePositionMap;
+    }
+
+    void changeStatus(GHCommitState state, String description) throws MojoExecutionException {
+        try {
+            this.repo.createCommitStatus(
+                this.pr.getHead().getSha(),
+                state,
+                null,
+                description,
+                CONTEXT
+            );
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    void removeAllComment() throws MojoExecutionException {
+        try {
+            for (GHPullRequestReviewComment comment : this.pr.listReviewComments()) {
+                if (comment.getUser().getLogin().equals(this.username)
+                    && comment.getBody().startsWith(PREFIX)) {
+                    comment.delete();
+                }
+            }
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    void createComment(String path, int position, String message) throws MojoExecutionException {
+        try {
+            this.pr.createReviewComment(
+                String.format("%s\n%s", PREFIX, message),
+                this.pr.getHead().getSha(),
+                path,
+                position
+            );
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
     }
 }
