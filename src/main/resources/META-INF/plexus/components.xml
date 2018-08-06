@@ -1,0 +1,12 @@
+<component-set>
+	<components>
+		<component>
+			<role>com.github.unchai.maven.checkstyle.GithubHelper</role>
+			<implementation>com.github.unchai.maven.checkstyle.GithubHelper</implementation>
+		</component>
+		<component>
+			<role>com.github.unchai.maven.checkstyle.CheckstyleExecutor</role>
+			<implementation>com.github.unchai.maven.checkstyle.CheckstyleExecutor</implementation>
+		</component>
+	</components>
+</component-set>

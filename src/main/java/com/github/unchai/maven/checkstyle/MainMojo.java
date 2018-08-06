@@ -52,8 +52,8 @@ public class MainMojo extends AbstractMojo {
     @Parameter(property = "github.pullRequest", required = true)
     Integer ghPullRequest;
 
-    @Parameter(defaultValue = "${project.basedir}", required = true)
-    String projectBasedir;
+    @Parameter(defaultValue = "${project.basedir}", required = true, readonly = true)
+    File projectBasedir;
 
     @Parameter(property = "checkstyle-github.configLocation", required = true)
     String configLocation;
@@ -121,7 +121,7 @@ public class MainMojo extends AbstractMojo {
     }
 
     private String stripBasedir(String filepath) {
-        return filepath.replace(projectBasedir, "").substring(1);
+        return filepath.replace(projectBasedir.getPath(), "").substring(1);
     }
 
     private Map<SeverityLevel, Integer> buildSeverityLevelCountMap(List<CheckstyleError> errors) {
