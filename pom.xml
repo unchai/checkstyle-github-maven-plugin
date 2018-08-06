@@ -13,7 +13,7 @@
 
 	<groupId>com.github.unchai</groupId>
 	<artifactId>checkstyle-github-maven-plugin</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Checkstyle github pull request maven plugin</name>
@@ -47,6 +47,17 @@
 		<system>travis-ci</system>
 		<url>https://travis-ci.org/unchai/checkstyle-github-maven-plugin</url>
 	</ciManagement>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
