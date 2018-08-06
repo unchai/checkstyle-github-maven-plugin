@@ -3,23 +3,12 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>8</source>
-					<target>8</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 
 	<parent>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-plugins</artifactId>
 		<version>32</version>
+		<relativePath>../../pom/maven/maven-plugins/pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.github.unchai</groupId>
@@ -27,7 +16,23 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
+	<scm>
+		<connection>scm:git:https://github.com/unchai/checkstyle-github-maven-plugin.git</connection>
+		<developerConnection>scm:git:https://github.com/unchai/checkstyle-github-maven-plugin.git</developerConnection>
+		<url>https://github.com/unchai/checkstyle-github-maven-plugin</url>
+	</scm>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/unchai/checkstyle-github-maven-plugin/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>travis-ci</system>
+		<url>https://travis-ci.org/unchai/checkstyle-github-maven-plugin</url>
+	</ciManagement>
+
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<powermock.version>1.7.4</powermock.version>
 	</properties>
 
@@ -52,6 +57,12 @@
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
 			<version>8.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun</groupId>
+					<artifactId>tools</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
