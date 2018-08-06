@@ -18,12 +18,12 @@ public class GithubHelperTest {
     private GithubHelper githubHelper;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         githubHelper = new GithubHelper();
     }
 
     @Test
-    public void parsePatch_MODIFY() throws IOException {
+    public void parsePatchMODIFY() throws IOException {
         final Map<Integer, Integer> diffMap = githubHelper.parsePatch(readFile("/diff_modify.txt"));
 
         assertThat(diffMap.size(), is(3));
@@ -33,7 +33,7 @@ public class GithubHelperTest {
     }
 
     @Test
-    public void parsePatch_ADD() throws IOException {
+    public void parsePatchADD() throws IOException {
         final Map<Integer, Integer> diffMap = githubHelper.parsePatch(readFile("/diff_add.txt"));
 
         assertThat(diffMap.size(), is(3));
@@ -43,14 +43,10 @@ public class GithubHelperTest {
     }
 
     @Test
-    public void parsePatch_DELETE() throws IOException {
+    public void parsePatchDELETE() throws IOException {
         final Map<Integer, Integer> diffMap = githubHelper.parsePatch(readFile("/diff_delete.txt"));
 
         assertThat(diffMap.isEmpty(), is(true));
-    }
-
-    @Test
-    public void connect() {
     }
 
     private String readFile(String filename) throws IOException {

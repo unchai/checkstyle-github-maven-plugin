@@ -17,14 +17,14 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
-public class GithubHelper {
-    private static final String CONTEXT = "convention/checkstyle";
-    private static final String PREFIX = "[checkstyle]";
+class GithubHelper {
+    private static final String CONTEXT = "coding-convention/checkstyle";
+    private static final String PREFIX = "#### :rotating_light: checkstyle defects";
     private GHRepository repo;
     private GHPullRequest pr;
     private String username;
 
-    public GithubHelper() {
+    GithubHelper() {
     }
 
     Map<Integer, Integer> parsePatch(String patch) {
@@ -115,16 +115,27 @@ public class GithubHelper {
         }
     }
 
-    void createComment(String path, int position, String message) throws MojoExecutionException {
+    void createComment(Comment comment) throws MojoExecutionException {
         try {
             this.pr.createReviewComment(
-                String.format("%s\n%s", PREFIX, message),
+                buildCommentBody(comment),
                 this.pr.getHead().getSha(),
-                path,
-                position
+                comment.getPath(),
+                comment.getPosition()
             );
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    private String buildCommentBody(Comment comment) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(String.format("%s%n", PREFIX));
+
+        for (CheckstyleError error : comment.getCheckstyleErrors()) {
+            builder.append(String.format("[%s] %s%n", error.getSeverityLevel().name(), error.getMessage()));
+        }
+
+        return builder.toString();
     }
 }

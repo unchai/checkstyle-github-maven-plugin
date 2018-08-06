@@ -1,5 +1,7 @@
 package com.github.unchai.maven.checkstyle;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 
 public class CheckstyleError {
@@ -38,5 +40,10 @@ public class CheckstyleError {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
