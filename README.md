@@ -4,6 +4,8 @@
 
 A maven plug-in that leaves the result of a checkstyle of a project as a comment on github's pull request.
 
+![Example](example.jpg)
+
 ### Requirements
 
 * Maven 3
