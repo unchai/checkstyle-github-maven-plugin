@@ -39,6 +39,23 @@ $ mvn checkstyle-github:checkstyle-github \
     -Dgithub.pullRequest=<pull request id>
 ```
 
+#### with Jenkinsfile
+
+```
+node {
+    stage('lint') {
+        if (env.CHANGE_ID) {
+            withCredentials([[$class: 'StringBinding', credentialsId: 'github-bot', variable: 'GITHUB_ACCESS_TOKEN']]) {
+                sh "'${pwd()}/mvnw' clean checkstyle-github:checkstyle-github" +
+                   " -Dgithub.token=${GITHUB_ACCESS_TOKEN}" +
+                   " -Dgithub.repository=owner/repo" +
+                   " -Dgithub.pullRequest=${env.CHANGE_ID}"
+            }
+        }
+    }
+}
+```
+
 ## License
 
 Apache License 2.0 © 2018 [unchai](https://github.com/unchai)
