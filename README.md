@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/unchai/checkstyle-github-maven-plugin.svg)](https://travis-ci.org/unchai/checkstyle-github-maven-plugin)
 
-A maven plug-in that leaves the result of a checkstyle of a project as a comment on github's pull request.
+A maven plugin that leaves comment of the result of a "Checkstyle" on github's pull request.
 
 ![Example](example.jpg)
 
