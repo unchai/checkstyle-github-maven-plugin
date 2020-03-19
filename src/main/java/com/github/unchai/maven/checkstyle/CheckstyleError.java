@@ -18,50 +18,13 @@
  */
 package com.github.unchai.maven.checkstyle;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
+import lombok.Data;
 
+@Data
 public class CheckstyleError {
     private SeverityLevel severityLevel;
-    private String filename;
+    private String path;
     private int line;
     private String message;
-
-    public SeverityLevel getSeverityLevel() {
-        return severityLevel;
-    }
-
-    public void setSeverityLevel(SeverityLevel severityLevel) {
-        this.severityLevel = severityLevel;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line = line;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 }

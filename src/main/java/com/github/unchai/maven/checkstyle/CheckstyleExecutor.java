@@ -20,6 +20,7 @@ package com.github.unchai.maven.checkstyle;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -29,16 +30,17 @@ import com.puppycrawl.tools.checkstyle.PropertiesExpander;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 public class CheckstyleExecutor {
-    private Checker checker;
+    private final Checker checker = new Checker();
+    private final String configLocation;
 
-    public CheckstyleExecutor() {
-        this.checker = new Checker();
+    public CheckstyleExecutor(String configLocation) {
+        this.configLocation = configLocation;
     }
 
-    public List<CheckstyleError> execute(String config, List<File> files) throws MojoExecutionException {
+    public List<CheckstyleError> execute(File baseDir, List<String> files) throws MojoExecutionException {
         try {
             final Configuration configuration = ConfigurationLoader.loadConfiguration(
-                config,
+                configLocation,
                 new PropertiesExpander(System.getProperties())
             );
 
@@ -47,11 +49,19 @@ public class CheckstyleExecutor {
             checker.setModuleClassLoader(Thread.currentThread().getContextClassLoader());
             checker.configure(configuration);
             checker.addListener(listener);
-            checker.process(files);
+            checker.process(files.stream().map(file -> new File(baseDir, file)).collect(Collectors.toList()));
 
-            return listener.getErrors();
+            return listener.getErrors()
+                .stream()
+                .map(error -> stripBaseDir(baseDir.getPath(), error))
+                .collect(Collectors.toList());
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    private CheckstyleError stripBaseDir(String baseDir, CheckstyleError checkstyleError) {
+        checkstyleError.setPath(checkstyleError.getPath().replace(baseDir, "").substring(1));
+        return checkstyleError;
     }
 }

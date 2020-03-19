@@ -33,16 +33,19 @@ import org.kohsuke.github.GHPullRequestFileDetail;
 import org.kohsuke.github.GHPullRequestReviewComment;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
 
 class GithubHelper {
     private static final String CONTEXT = "coding-convention/checkstyle";
     private static final String PREFIX = "#### :rotating_light: checkstyle defects";
+
     private GHRepository repo;
     private GHPullRequest pr;
     private String username;
 
-    GithubHelper() {
+    GithubHelper(GitHub github, String repository, int pullRequest) throws IOException {
+        this.username = github.getMyself().getLogin();
+        this.repo = github.getRepository(repository);
+        this.pr = this.repo.getPullRequest(pullRequest);
     }
 
     Map<Integer, Integer> parsePatch(String patch) {
@@ -67,21 +70,6 @@ class GithubHelper {
         }
 
         return map;
-    }
-
-    void connect(String endpoint, String token, String repository, int pullRequest) throws MojoExecutionException {
-        try {
-            final GitHub github = new GitHubBuilder()
-                .withEndpoint(endpoint)
-                .withOAuthToken(token)
-                .build();
-
-            this.username = github.getMyself().getLogin();
-            this.repo = github.getRepository(repository);
-            this.pr = this.repo.getPullRequest(pullRequest);
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        }
     }
 
     List<ChangedFile> listChangedFile() {
