@@ -51,7 +51,7 @@ public class CheckstyleAuditListener implements AuditListener {
     public void addError(AuditEvent event) {
         final CheckstyleError error = new CheckstyleError();
         error.setSeverityLevel(event.getSeverityLevel());
-        error.setFilename(event.getFileName());
+        error.setPath(event.getFileName());
         error.setLine(event.getLine());
         error.setMessage(event.getMessage());
 

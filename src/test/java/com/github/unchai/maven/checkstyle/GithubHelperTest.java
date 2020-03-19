@@ -1,4 +1,4 @@
-/*
+package com.github.unchai.maven.checkstyle;/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.github.unchai.maven.checkstyle;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,9 @@ import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kohsuke.github.GHMyself;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,8 +40,15 @@ public class GithubHelperTest {
     private GithubHelper githubHelper;
 
     @Before
-    public void setUp() {
-        githubHelper = new GithubHelper();
+    public void setUp() throws IOException {
+        final GitHub github = mock(GitHub.class);
+        final GHMyself ghMyself = mock(GHMyself.class);
+        final GHRepository ghRepository = mock(GHRepository.class);
+
+        when(github.getMyself()).thenReturn(ghMyself);
+        when(github.getRepository(anyString())).thenReturn(ghRepository);
+
+        githubHelper = new GithubHelper(github, "repo", 1);
     }
 
     @Test
